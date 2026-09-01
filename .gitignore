@@ -1,0 +1,11 @@
+# Full-resolution originals — kept locally as a backup, not deployed.
+# The optimised versions in photos/ are what the site serves.
+photos/originals/
+
+# Design notes — kept local, not published with the public site.
+portfolio-prd.md
+photos/README.md
+
+# Local render previews
+_preview.html
+.DS_Store
