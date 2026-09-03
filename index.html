@@ -40,275 +40,241 @@
 </script>
 
 <style>
-  :root {
-    --bg: #fcfcfa;
-    --surface: #ffffff;
-    --text: #15181b;
-    --muted: #6a736e;
-    --faint: #949c97;
-    --accent: #1a6b47;
-    --accent-2: #12583a;
-    --accent-soft: #e8f2ec;
-    --border: #eae9e3;
-    --hairline: #efeee8;
-    --nav-bg: rgba(252, 252, 250, .78);
-    --shadow: 0 1px 2px rgba(20, 25, 20, .03), 0 18px 40px -20px rgba(20, 25, 20, .18);
-    --photo-shadow: 0 2px 4px rgba(20, 25, 20, .05), 0 16px 34px -16px rgba(20, 25, 20, .42);
-    --photo-ring: rgba(20, 25, 20, .10);
-  }
-  @media (prefers-color-scheme: dark) {
-    :root {
-      --bg: #0e100f;
-      --surface: #161817;
-      --text: #eaebe9;
-      --muted: #9aa39e;
-      --faint: #6c756f;
-      --accent: #5fc490;
-      --accent-2: #85d6ac;
-      --accent-soft: #16241d;
-      --border: #262a28;
-      --hairline: #1f2321;
-      --nav-bg: rgba(14, 16, 15, .78);
-      --shadow: 0 1px 2px rgba(0, 0, 0, .4), 0 18px 44px -22px rgba(0, 0, 0, .7);
-      --photo-shadow: 0 2px 4px rgba(0, 0, 0, .5), 0 16px 36px -16px rgba(0, 0, 0, .8);
-      --photo-ring: rgba(255, 255, 255, .09);
-    }
-  }
+/* ===================== Fonts (self-hosted, no external requests) ===================== */
+@font-face { font-family:"Garamond"; src:url("fonts/ebgaramond-normal.woff2") format("woff2");
+             font-weight:400 700; font-style:normal; font-display:swap; }
+@font-face { font-family:"Garamond"; src:url("fonts/ebgaramond-italic.woff2") format("woff2");
+             font-weight:400 600; font-style:italic; font-display:swap; }
+@font-face { font-family:"Newsreader"; src:url("fonts/newsreader-latin.woff2") format("woff2");
+             font-weight:300 700; font-style:normal; font-display:swap; }
+@font-face { font-family:"Plex Mono"; src:url("fonts/plexmono-latin.woff2") format("woff2");
+             font-weight:400; font-style:normal; font-display:swap; }
 
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    font-size: 17px;
-    line-height: 1.65;
-    overflow-x: hidden;
-    -webkit-font-smoothing: antialiased;
-    text-rendering: optimizeLegibility;
-  }
+:root {
+  --display: "Garamond", Georgia, serif;
+  --text-face: "Newsreader", Georgia, serif;
+  --mono: "Plex Mono", ui-monospace, Menlo, monospace;
 
-  .wrap { max-width: 780px; margin: 0 auto; padding: 0 28px; }
+  /* the one grid: a fixed margin column carries every label, date and number */
+  --gutter: 184px;
+  --gap: 56px;
+  --measure: 27em;
 
-  a { color: var(--accent); text-decoration: none; }
-  a:hover { color: var(--accent-2); }
-  .prose a, .list a, .pcard p a, .case-body a, footer a { text-decoration: underline; text-decoration-color: color-mix(in srgb, var(--accent) 35%, transparent); text-underline-offset: 3px; }
-  .prose a:hover, .list a:hover, .pcard p a:hover, .case-body a:hover, footer a:hover { text-decoration-color: currentColor; }
+  --fs-body: 1.125rem;
+  --fs-label: .9375rem;
+  --fs-date: .75rem;
+  --fs-role: 1.1875rem;
+  --fs-co: 1.375rem;
+  --fs-lead: 1.5rem;
 
-  :focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 4px; }
+  --u: 8px;
+  --s1: 8px; --s2: 16px; --s3: 24px; --s4: 40px; --s5: 64px; --s6: 120px;
 
-  .skip { position: absolute; left: -9999px; top: 0; background: var(--surface); color: var(--text); padding: 10px 16px; border: 1px solid var(--border); border-radius: 0 0 10px 0; z-index: 100; }
-  .skip:focus { left: 0; }
+  --bg: #fcfbf8;
+  --text: #16181a;
+  --muted: #4b534d;
+  --faint: #8a928c;
+  --accent: #4a5a34;
+  --rule: #e2e1d9;
+  --nav-bg: rgba(252, 251, 248, .88);
+}
+@media (prefers-color-scheme: dark) {
+  :root { --bg:#0d0f0e; --text:#eef0ec; --muted:#aab3ac; --faint:#727a75;
+          --accent:#b9c98f; --rule:#252a27; --nav-bg:rgba(13,15,14,.88); }
+}
 
-  /* ---------- Nav ---------- */
-  .nav { position: sticky; top: 0; z-index: 50; background: var(--nav-bg); backdrop-filter: saturate(180%) blur(12px); -webkit-backdrop-filter: saturate(180%) blur(12px); border-bottom: 1px solid var(--hairline); }
-  .nav-in { display: flex; align-items: center; gap: 18px; height: 60px; }
-  .nav-name { font-weight: 600; color: var(--text); letter-spacing: -.01em; white-space: nowrap; }
-  .nav-links { display: flex; gap: 19px; margin-left: auto; }
-  .nav-links a { color: var(--muted); font-size: .89rem; white-space: nowrap; }
-  .nav-links a:hover { color: var(--text); }
-  .nav-social { display: flex; gap: 14px; padding-left: 20px; margin-left: 20px; border-left: 1px solid var(--border); }
-  .nav-social a { color: var(--muted); display: inline-flex; }
-  .nav-social a:hover { color: var(--accent); }
-  .nav-social svg { width: 18px; height: 18px; display: block; }
+* { margin:0; padding:0; box-sizing:border-box; }
+html { -webkit-text-size-adjust:100%; }
+body { background:var(--bg); color:var(--text); font-family:var(--text-face);
+       font-size:var(--fs-body); line-height:1.62; font-optical-sizing:auto;
+       -webkit-font-smoothing:antialiased; text-wrap:pretty;
+  font-kerning:normal; font-variant-ligatures:common-ligatures; }
+.wrap { max-width:1032px; margin:0 auto; padding-inline:32px; }
 
-  /* ---------- Hero + About ---------- */
-  header.top { position: relative; padding-top: 92px; padding-bottom: 76px; }
-  header.top::before {
-    content: ""; position: absolute; z-index: -1; top: -140px; left: 50%; transform: translateX(-50%);
-    width: min(860px, 130vw); height: 460px;
-    background: radial-gradient(ellipse at center, var(--accent-soft), transparent 68%);
-    opacity: .75; pointer-events: none;
-  }
-  .hero { display: flex; align-items: center; gap: 40px; }
-  .hero-text { flex: 1; min-width: 0; }
-  h1 { font-size: clamp(2.4rem, 6.4vw, 3.5rem); line-height: 1.05; letter-spacing: -.035em; font-weight: 640; }
-  .lead { font-size: clamp(1.15rem, 2.7vw, 1.5rem); font-weight: 450; line-height: 1.35; margin-top: 20px; max-width: 24ch; letter-spacing: -.015em; }
-  .links { display: flex; gap: 10px; margin-top: 30px; }
-  .ghost { display: inline-flex; align-items: center; gap: 7px; padding: 9px 16px; border: 1px solid var(--border); border-radius: 999px; font-size: .9rem; font-weight: 500; color: var(--text); background: var(--surface); transition: border-color .14s ease, transform .14s ease; }
-  .ghost:hover { border-color: var(--accent); color: var(--text); transform: translateY(-1px); }
-  .ghost svg { width: 15px; height: 15px; }
+a { color:inherit; text-decoration:none; }
+.prose a, .oc p a, .case-body a, .list a, .press a, .links a {
+  color:var(--accent); text-decoration:underline;
+  text-decoration-thickness:.5px; text-underline-offset:.2em;
+  text-decoration-color:color-mix(in srgb, var(--accent) 45%, transparent); }
+.prose a:hover, .oc p a:hover, .case-body a:hover, .list a:hover,
+.press a:hover, .links a:hover { text-decoration-color:currentColor; }
+:focus-visible { outline:1.5px solid var(--accent); outline-offset:3px; }
+.skip { position:absolute; left:-9999px; top:0; background:var(--bg); padding:10px 16px;
+        border:1px solid var(--rule); z-index:100; }
+.skip:focus { left:0; }
 
-  /* Portrait — same graceful-degradation trick as the .photo tiles: the JPEG is the top
-     background layer, the "AD" monogram sits beneath it, so the hero looks finished
-     whether or not photos/portrait.jpg exists yet. */
-  .avatar-ring {
-    flex: none; padding: 4px; border-radius: 50%;
-    background: linear-gradient(150deg,
-      color-mix(in srgb, var(--accent) 58%, transparent),
-      color-mix(in srgb, var(--accent) 10%, var(--surface)));
-    box-shadow: var(--photo-shadow);
-  }
-  .avatar {
-    display: block; width: 124px; height: 124px; border-radius: 50%;
-    background-color: var(--accent-soft);
-    background-image:
-      url('photos/portrait.jpg'),
-      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 124 124'%3E%3Ctext x='62' y='79' font-size='44' font-family='-apple-system,Segoe UI,Roboto,sans-serif' font-weight='600' fill='%233f9e73' text-anchor='middle'%3EAD%3C/text%3E%3C/svg%3E");
-    background-size: cover, cover;
-    background-position: center, center;
-    background-repeat: no-repeat, no-repeat;
-    box-shadow: inset 0 0 0 1px var(--photo-ring);
-  }
-
-  .bio { margin-top: 52px; max-width: 60ch; }
-  .bio p { color: var(--muted); }
-  .bio p + p { margin-top: 15px; }
-  .bio strong { color: var(--text); font-weight: 600; }
-
-  /* ---------- Sections ---------- */
-  main { border-top: 1px solid var(--hairline); }
-  /* scroll-margin keeps anchored headings clear of the sticky nav */
-  main > section { padding: clamp(78px, 10vw, 118px) 0; scroll-margin-top: 72px; }
-  main > section + section { border-top: 1px solid var(--hairline); }
-  .sh { font-size: clamp(1.3rem, 3vw, 1.55rem); font-weight: 620; letter-spacing: -.02em; margin-bottom: 40px; }
-  .sh .hash { color: var(--accent); margin-right: 6px; font-weight: 500; }
-  .prose { max-width: 60ch; }
-  .prose p + p { margin-top: 15px; }
-
-  /* ---------- Timeline ---------- */
-  .timeline { position: relative; padding-left: 26px; }
-  .timeline::before { content: ""; position: absolute; left: 4px; top: 10px; bottom: 10px; width: 1px; background: var(--border); }
-
-  /* company header — larger ringed node, anchors the roles beneath it */
-  .tl-group { padding-bottom: 34px; }
-  .tl-group:last-child { padding-bottom: 0; }
-  .tl-co { position: relative; display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; margin-bottom: 18px; }
-  .tl-co::before { content: ""; position: absolute; left: -27px; top: 7px; width: 11px; height: 11px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 0 4px var(--bg), 0 0 0 6px color-mix(in srgb, var(--accent) 22%, transparent); }
-  .tl-co h3 { font-size: 1.06rem; font-weight: 620; letter-spacing: -.015em; }
-  .tl-co .org { color: var(--muted); font-weight: 450; }
-  .tl-co .span { color: var(--faint); font-size: .82rem; letter-spacing: .02em; }
-
-  /* role node — smaller, hollow */
-  .tl { position: relative; padding-bottom: 22px; }
-  .tl:last-child { padding-bottom: 0; }
-  .tl::before { content: ""; position: absolute; left: -24px; top: 8px; width: 7px; height: 7px; border-radius: 50%; background: var(--bg); border: 1.5px solid color-mix(in srgb, var(--accent) 55%, transparent); }
-  .tl.edu::before { border-color: var(--faint); }
-  .tl .year { font-size: .8rem; color: var(--faint); letter-spacing: .02em; }
-  .tl h4 { font-size: .99rem; font-weight: 600; margin-top: 2px; letter-spacing: -.01em; }
-  .tl .org { color: var(--muted); font-weight: 450; }
-  .tl p { color: var(--muted); font-size: .92rem; margin-top: 6px; max-width: 60ch; }
-
-  /* ---------- Case studies ---------- */
-  .case { border: 1px solid var(--border); border-radius: 16px; background: var(--surface); margin-bottom: 12px; transition: border-color .16s ease, box-shadow .16s ease; }
-  .case[open] { border-color: color-mix(in srgb, var(--accent) 45%, var(--border)); box-shadow: var(--shadow); }
-  .case > summary { list-style: none; cursor: pointer; display: grid; grid-template-columns: auto 1fr auto; gap: 18px; padding: 24px 26px; align-items: start; }
-  .case > summary::-webkit-details-marker { display: none; }
-  .case-n { font-variant-numeric: tabular-nums; color: var(--accent); font-weight: 600; font-size: .9rem; padding-top: 3px; }
-  .case-h b { font-size: 1.1rem; font-weight: 600; letter-spacing: -.015em; }
-  .case-h .hook { display: block; color: var(--muted); font-size: .93rem; margin-top: 5px; }
-  .takes { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 14px; }
-  .takes span { font-size: .76rem; font-weight: 550; color: var(--accent); background: var(--accent-soft); border-radius: 7px; padding: 3px 9px; }
-  .case-x { width: 22px; height: 22px; position: relative; flex: none; margin-top: 3px; }
-  .case-x::before, .case-x::after { content: ""; position: absolute; background: var(--faint); border-radius: 2px; transition: transform .2s ease; }
-  .case-x::before { left: 4px; right: 4px; top: 10px; height: 2px; }
-  .case-x::after { top: 4px; bottom: 4px; left: 10px; width: 2px; }
-  .case[open] .case-x::after { transform: rotate(90deg); }
-  .case-body { padding: 6px 26px 26px; }
-  .case-body p { margin-top: 15px; color: var(--muted); max-width: 66ch; }
-  .case-body b { color: var(--text); font-weight: 600; }
-
-  /* ---------- Community ---------- */
-  .group + .group { margin-top: 34px; }
-  .group h3 {
-    display: flex; align-items: center; gap: 7px;
-    font-size: .74rem; text-transform: uppercase; letter-spacing: .09em; font-weight: 600;
-    color: var(--faint); padding-bottom: 11px; border-bottom: 1px solid var(--hairline);
-  }
-  .group h3 svg { width: 13px; height: 13px; flex: none; }
-  .list { list-style: none; }
-  .list li { display: flex; justify-content: space-between; align-items: baseline; gap: 20px; flex-wrap: wrap; padding: 11px 0; }
-  .list .src { color: var(--faint); font-size: .85rem; white-space: nowrap; }
-
-  /* icon sprite defaults */
-  .ico { fill: none; stroke: currentColor; stroke-width: 1.9; stroke-linecap: round; stroke-linejoin: round; }
-
-  /* ---------- Off the clock ---------- */
-  /* no max-width: the sentence is meant to sit on one line at the full measure */
-  .intro { color: var(--muted); margin: -22px 0 34px; font-size: 1.02rem; }
-  .pcard { position: relative; border: 1px solid var(--border); border-radius: 18px; background: var(--surface); padding: 20px; overflow: hidden; }
-  .pcard-h { display: flex; align-items: center; gap: 9px; flex-wrap: wrap; }
-  .pcard-h .ico-lg { width: 18px; height: 18px; color: var(--accent); flex: none; }
-  .tri { display: inline-flex; align-items: center; gap: 4px; flex: none; color: var(--accent); }
-  .tri .ico { width: 16px; height: 16px; stroke-width: 1.7; }
-  .pcard h3 { font-size: 1.06rem; font-weight: 600; letter-spacing: -.015em; }
-  .pcard p { color: var(--muted); font-size: .94rem; margin-top: 8px; }
-  .pcard.wide { padding: 22px; background:
-      radial-gradient(680px 220px at 88% -30%, var(--accent-soft), transparent 70%), var(--surface);
-      display: grid; grid-template-columns: 262px 1fr; gap: 26px; align-items: center; }
-  .pcard.wide .pbody { padding: 4px 4px 4px 0; }
-  .pcard.wide p { max-width: 48ch; }
-  .pgrid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 14px; }
-
-  /* Shared photo frame — identical treatment for all three images.
-     The gradient is a second background layer, so a missing/not-yet-added
-     photo degrades to a tasteful tinted tile instead of a broken image. */
-  .photo {
-    aspect-ratio: 4 / 3;
-    border-radius: 12px;
-    background-position: center;
-    background-size: cover;
-    background-repeat: no-repeat;
-    box-shadow: var(--photo-shadow), inset 0 0 0 1px var(--photo-ring);
-  }
-  .pcard > .photo { margin-bottom: 16px; }
-
-  .press { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
-  .pchip { font-size: .82rem; font-weight: 500; border: 1px solid var(--border); border-radius: 999px; padding: 5px 13px; color: var(--muted); background: var(--bg); }
-  .pchip:hover { border-color: var(--accent); color: var(--text); }
-
-  /* ---------- Skills ---------- */
-  .skl > div { display: grid; grid-template-columns: 210px 1fr; gap: 22px; align-items: baseline; padding: 15px 0; border-top: 1px solid var(--hairline); }
-  .skl > div:first-child { border-top: 0; padding-top: 0; }
-  .skl dt { font-size: .95rem; font-weight: 600; letter-spacing: -.01em; }
-  .skl dd { color: var(--muted); font-size: .93rem; }
+/* ===================== Nav ===================== */
+.nav { position:sticky; top:0; z-index:50; background:var(--nav-bg);
+       backdrop-filter:saturate(150%) blur(10px); -webkit-backdrop-filter:saturate(150%) blur(10px); }
+.nav-in { display:flex; align-items:baseline; gap:var(--gap); height:60px; padding-top:19px;
+          border-bottom:1px solid var(--rule); }
+.nav-name { font-family:var(--display); font-size:1.125rem; white-space:nowrap; }
+.nav-links { display:flex; gap:26px; margin-left:auto; font-size:.9375rem; }
+.nav-links a { color:var(--muted); white-space:nowrap; }
+.nav-links a:hover { color:var(--text); }
 
 
-  /* ---------- Footer ---------- */
-  footer { border-top: 1px solid var(--hairline); margin-top: clamp(60px, 8vw, 96px); padding: 52px 0 88px; }
-  footer .fmeta { color: var(--faint); font-size: .84rem; line-height: 1.9; }
 
-  /* ---------- Responsive ---------- */
-  @media (max-width: 720px) {
-    .nav-links { display: none; }
-    .hero { flex-direction: column-reverse; align-items: flex-start; gap: 24px; }
-    .bio { margin-top: 40px; }
-    .case > summary { padding: 20px; gap: 14px; }
-    .case-body { padding: 6px 20px 22px; }
-    .list li { gap: 3px; padding: 13px 0; }
-    .list .src { white-space: normal; }
-    .skl > div { grid-template-columns: 1fr; gap: 6px; }
-    .pgrid { grid-template-columns: 1fr; }
-    .pcard, .pcard.wide { padding: 18px; }
-    .pcard.wide { grid-template-columns: 1fr; gap: 16px; }
-    .pcard.wide .pbody { padding: 0; }
-  }
 
-  @media (prefers-reduced-motion: reduce) {
-    html { scroll-behavior: auto; }
-    * { transition: none !important; }
-  }
+/* ===================== Hero ===================== */
+header.top { padding-top:var(--s6); padding-bottom:var(--s6); }
+h1 { font-family:var(--display); font-weight:400;
+     font-size:clamp(3rem, 9.2vw, 7.25rem); line-height:.9; letter-spacing:-.028em;
+     font-kerning:normal; font-feature-settings:"kern" 1, "liga" 1; white-space:nowrap; }
+.namerow { display:flex; align-items:flex-end; justify-content:space-between; gap:var(--gap); }
+.hero { margin-top:var(--s4); }
+.lead { font-family:var(--display); font-size:var(--fs-lead); line-height:1.24;
+        color:var(--muted); max-width:38ch; }
+.links { display:flex; gap:24px; margin-top:var(--s4); font-size:.9375rem; }
+.links { font-size:1.0625rem; }
+
+.avatar { flex:none; display:block; width:148px; height:148px; border-radius:50%;
+  filter:grayscale(1) sepia(.16) contrast(1.09) brightness(1.03) saturate(1.4);
+  background-color:var(--rule);
+  background-image:url('photos/portrait.jpg'),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 132 132'%3E%3Ctext x='66' y='84' font-size='42' font-family='Georgia,serif' fill='%233f9e73' text-anchor='middle'%3EAD%3C/text%3E%3C/svg%3E");
+  background-size:cover; background-position:center; }
+.bio { margin-top:var(--s5); max-width:var(--measure); }
+.bio p + p { margin-top:var(--s3); }
+.bio strong { font-weight:600; }
+
+/* ===================== The grid ===================== */
+main > section { display:grid; grid-template-columns:var(--gutter) minmax(0,1fr);
+                 column-gap:var(--gap); padding:var(--s5) 0 var(--s6);
+                 border-top:1px solid var(--rule); }
+main > section > .sh { grid-column:1; }
+main > section > *:not(.sh) { grid-column:1 / -1; }
+.intro { grid-column:2 !important; }
+/* rows that reach into the margin column carry their own copy of the same grid */
+.tl-group, .group, .oc, .skl > div {
+  grid-column:1 / -1 !important;
+  display:grid; grid-template-columns:var(--gutter) minmax(0,1fr); column-gap:var(--gap);
+}
+.sh { font-family:var(--display); font-style:italic; font-weight:400; font-size:1.625rem;
+      color:var(--text); line-height:1.2; margin-bottom:var(--s4); }
+.prose { max-width:var(--measure); }
+.prose p + p { margin-top:var(--s3); }
+
+/* ===================== Experience ===================== */
+.tl-group { margin-bottom:var(--s5); row-gap:0; }
+.tl { display:contents; }
+.tl-co { grid-column:2; }
+
+.tl-body { margin-bottom:var(--s4); }
+.tl-group > .tl:last-child .tl-body { margin-bottom:0; }
+.tl-group:last-child { margin-bottom:0; }
+.tl-co { display:flex; align-items:baseline; gap:16px; flex-wrap:wrap;
+         margin-bottom:var(--s3); }
+.tl-co h3 { font-family:var(--display); font-size:2rem; font-weight:400; letter-spacing:-.016em; }
+.tl-co .org { color:var(--muted); }
+.tl-span { font-family:var(--mono); font-size:var(--fs-date); color:var(--faint);
+           letter-spacing:.02em; padding-top:20px; }
+.year { font-family:var(--mono); font-size:var(--fs-date); color:var(--faint);
+        letter-spacing:.02em; font-variant-numeric:tabular-nums; padding-top:9px; }
+.tl-body h4 { font-family:var(--text-face); font-size:1.0625rem; font-weight:600;
+              letter-spacing:.02em; }
+.tl-body h4 .org { color:var(--muted); }
+.tl-body p { margin-top:var(--s1); max-width:var(--measure); }
+
+/* ===================== Skills ===================== */
+.skl { display:contents; }
+.skl > div { padding:var(--s3) 0; border-top:1px solid var(--rule); align-items:baseline; }
+.skl > div:first-child { border-top:0; padding-top:0; }
+.skl > div:last-child { padding-bottom:0; }
+.skl dt { font-family:var(--display); font-style:italic; color:var(--muted);
+          font-size:1.0625rem; padding-top:2px; }
+.skl dd { max-width:var(--measure); }
+
+/* ===================== Case studies ===================== */
+.case { border-top:1px solid var(--rule); }
+.case:first-of-type { border-top:0; }
+.case { grid-column:1 / -1 !important; }
+.case > summary { list-style:none; cursor:pointer; display:grid;
+  grid-template-columns:var(--gutter) minmax(0,1fr) auto; column-gap:var(--gap); }
+.case > summary::-webkit-details-marker { display:none; }
+.case-x { align-self:start; padding-top:48px; color:var(--accent);
+  font-family:var(--mono); font-size:var(--fs-date); letter-spacing:.08em;
+  white-space:nowrap; }
+.case-x::after { content:"READ +"; }
+.case[open] .case-x::after { content:"CLOSE \2212"; }
+.case > summary:hover .case-h b { color:var(--accent); }
+.case > summary:hover .case-x { text-decoration:underline;
+  text-decoration-thickness:.5px; text-underline-offset:.25em; }
+.case > summary::-webkit-details-marker { display:none; }
+.case-n { font-family:var(--display); font-size:2rem; color:var(--faint);
+          padding-top:48px; line-height:1; }
+.case-h { padding:var(--s4) 0; }
+.case-h b { display:block; font-family:var(--display); font-size:1.875rem;
+            font-weight:400; letter-spacing:-.014em; }
+.case-h .hook { display:block; color:var(--muted); margin-top:4px; max-width:var(--measure); }
+.takes { display:block; color:var(--faint); font-size:.9375rem; margin-top:var(--s2); }
+.takes span:not(:last-child)::after { content:" · "; color:var(--rule); }
+.case[open] .case-h { padding-bottom:var(--s2); }
+.case-body { padding-bottom:var(--s4); max-width:var(--measure);
+  margin-left:calc(var(--gutter) + var(--gap)); }
+.case-body p { margin-top:var(--s2); }
+.case-body p:first-child { margin-top:0; }
+.case-body b { font-weight:600; }
+
+/* ===================== Community ===================== */
+.group { margin-bottom:var(--s5); }
+.group:last-child { margin-bottom:0; }
+.group h3 { font-family:var(--display); font-style:italic; font-weight:400;
+            font-size:1.0625rem; color:var(--muted); padding-top:.12em; }
+.list { list-style:none; }
+.list li { display:flex; flex-wrap:wrap; align-items:baseline; gap:0 10px;
+           padding:0 0 var(--s2); max-width:var(--measure); }
+.list li:first-child { padding-top:0; }
+
+.list .src { color:var(--faint); font-size:.9375rem; }
+.list .src::before { content:"— "; color:var(--rule); }
+
+/* ===================== Off the clock ===================== */
+.intro { color:var(--muted); max-width:var(--measure); margin-bottom:var(--s5); }
+.oc { padding:var(--s5) 0; border-top:1px solid var(--rule); align-items:start; }
+.oc > .photo { grid-column:2; margin-bottom:var(--s3); }
+.oc > div { grid-column:2; }
+.oc:first-of-type { border-top:0; padding-top:0; }
+.oc:last-of-type { padding-bottom:0; }
+.photo { aspect-ratio:16 / 9; background-size:cover; background-position:center;
+         background-repeat:no-repeat;
+         filter:grayscale(1) sepia(.16) contrast(1.09) brightness(1.03) saturate(1.4); }
+.oc h3 { font-family:var(--display); font-size:1.4375rem; font-weight:400; }
+.oc p { margin-top:var(--s1); max-width:var(--measure); }
+.press { margin-top:var(--s2); font-size:1rem; color:var(--faint); }
+
+.press a:not(:last-child)::after { content:" · "; color:var(--rule); }
+
+/* ===================== Footer ===================== */
+footer { border-top:1px solid var(--rule); padding:var(--s5) 0 var(--s6); }
+.fmeta { color:var(--faint); font-size:.9375rem; line-height:1.9; }
+
+/* ===================== Responsive ===================== */
+@media (max-width: 900px) {
+  :root { --gutter:104px; --gap:28px; }
+  h1 { white-space:normal; }
+}
+@media (max-width: 680px) {
+  .nav-links { display:none; }
+  main > section, .tl-group, .group, .oc, .skl > div { grid-template-columns:1fr; }
+  main > section > .sh, main > section > *:not(.sh) { grid-column:1; }
+  .sh, .year, .skl dt, .group h3, .case-n { text-align:left; padding-top:0; }
+  .sh, .group h3 { margin-bottom:var(--s2); }
+  .year { margin-bottom:2px; }
+  .skl dt { margin-bottom:4px; }
+  .case-n { margin-top:var(--s3); }
+  .case-body { margin-left:0; }
+  .case > summary { grid-template-columns:1fr; }
+  .namerow { flex-direction:column; align-items:flex-start; gap:var(--s1); }
+  .list li { grid-template-columns:1fr; gap:2px; }
+  .oc { gap:var(--s1); }
+  .photo { max-width:280px; }
+}
 </style>
 </head>
 <body>
 
 <a class="skip" href="#main">Skip to content</a>
-
-<!-- Icon sprite — referenced with <svg class="ico"><use href="#i-…"></svg> -->
-<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
-  <defs>
-    <g id="i-project"><path d="M21 8v8a2 2 0 0 1-1 1.73l-7 4a2 2 0 0 1-2 0l-7-4A2 2 0 0 1 3 16V8a2 2 0 0 1 1-1.73l7-4a2 2 0 0 1 2 0l7 4A2 2 0 0 1 21 8z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/></g>
-    <g id="i-oss"><path d="M6 3v12"/><circle cx="18" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M18 9a9 9 0 0 1-9 9"/></g>
-    <g id="i-podcast"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><path d="M12 19v4"/></g>
-    <g id="i-article"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M16 13H8"/><path d="M16 17H8"/></g>
-    <g id="i-van"><path d="M2 17V8a1 1 0 0 1 1-1h12v10"/><path d="M15 10h3.6a2 2 0 0 1 1.7 1l1.5 2.5a2 2 0 0 1 .2.9V17h-7"/><path d="M2 17h1.5M9.5 17h4"/><circle cx="6" cy="18" r="2"/><circle cx="17" cy="18" r="2"/></g>
-    <!-- Triathlon, in race order: swim, bike, run -->
-    <g id="i-swim"><circle cx="16.5" cy="7.5" r="2"/><path d="M3.5 12.5 9.5 10.5 14 13"/><path d="M2 18.5q2.5-2 5 0t5 0 5 0 5 0"/></g>
-    <g id="i-bike"><circle cx="5.5" cy="17.5" r="3.2"/><circle cx="18.5" cy="17.5" r="3.2"/><path d="M5.5 17.5 9.5 9.5h6.5l2.5 8"/><path d="M12 17.5 9.5 9.5"/><path d="M12 17.5 16 9.5"/></g>
-    <g id="i-run"><circle cx="15.5" cy="4.5" r="2"/><path d="M8 21l3.5-6-3-3.5 1.5-4 3.5 3 3 .5"/><path d="M10.5 11.5 6.5 12.5"/><path d="M14 15l2.5 2 .5 4"/></g>
-    <g id="i-family"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></g>
-  </defs>
-</svg>
 
 <nav class="nav">
   <div class="wrap nav-in">
@@ -320,43 +286,26 @@
       <a href="#community">Community</a>
       <a href="#offclock">Off the clock</a>
     </div>
-    <div class="nav-social">
-      <a href="https://www.linkedin.com/in/augustindelaporte" aria-label="LinkedIn">
-        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.41v1.56h.05c.48-.9 1.63-1.85 3.36-1.85 3.6 0 4.27 2.37 4.27 5.45v6.29zM5.34 7.43a2.06 2.06 0 1 1 0-4.13 2.06 2.06 0 0 1 0 4.13zM7.12 20.45H3.56V9h3.56v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.72v20.55C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.73V1.72C24 .77 23.2 0 22.22 0z"/></svg>
-      </a>
-      <a href="https://github.com/GuGuss" aria-label="GitHub">
-        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .5C5.37.5 0 5.87 0 12.5c0 5.3 3.44 9.8 8.21 11.39.6.11.82-.26.82-.58l-.01-2.05c-3.34.73-4.04-1.61-4.04-1.61-.55-1.39-1.34-1.76-1.34-1.76-1.09-.75.08-.73.08-.73 1.2.09 1.84 1.24 1.84 1.24 1.07 1.83 2.81 1.3 3.5.99.11-.78.42-1.3.76-1.6-2.67-.3-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.13-.3-.54-1.52.11-3.18 0 0 1.01-.32 3.3 1.23a11.5 11.5 0 0 1 6 0c2.29-1.55 3.3-1.23 3.3-1.23.65 1.66.24 2.88.12 3.18.77.84 1.23 1.91 1.23 3.22 0 4.61-2.8 5.63-5.48 5.92.43.37.81 1.1.81 2.22l-.01 3.29c0 .32.22.7.83.58A12 12 0 0 0 24 12.5C24 5.87 18.63.5 12 .5z"/></svg>
-      </a>
-    </div>
   </div>
 </nav>
 
 <header id="top" class="wrap top">
+  <div class="namerow">
+    <h1>Augustin Delaporte</h1>
+    <span class="avatar" role="img" aria-label="Augustin Delaporte"></span>
+  </div>
   <div class="hero">
-    <div class="hero-text">
-      <h1>Augustin Delaporte</h1>
-      <p class="lead">Product leader who helped take a developer platform from 4 people to 350+.</p>
+    <div>
+      <p class="lead">Developer platforms, cloud infrastructure, and the product teams that ship them.</p>
       <div class="links">
-        <a class="ghost" href="https://www.linkedin.com/in/augustindelaporte">
-          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.41v1.56h.05c.48-.9 1.63-1.85 3.36-1.85 3.6 0 4.27 2.37 4.27 5.45v6.29zM5.34 7.43a2.06 2.06 0 1 1 0-4.13 2.06 2.06 0 0 1 0 4.13zM7.12 20.45H3.56V9h3.56v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.72v20.55C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.73V1.72C24 .77 23.2 0 22.22 0z"/></svg>
-          LinkedIn
-        </a>
-        <a class="ghost" href="https://github.com/GuGuss">
-          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .5C5.37.5 0 5.87 0 12.5c0 5.3 3.44 9.8 8.21 11.39.6.11.82-.26.82-.58l-.01-2.05c-3.34.73-4.04-1.61-4.04-1.61-.55-1.39-1.34-1.76-1.34-1.76-1.09-.75.08-.73.08-.73 1.2.09 1.84 1.24 1.84 1.24 1.07 1.83 2.81 1.3 3.5.99.11-.78.42-1.3.76-1.6-2.67-.3-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.13-.3-.54-1.52.11-3.18 0 0 1.01-.32 3.3 1.23a11.5 11.5 0 0 1 6 0c2.29-1.55 3.3-1.23 3.3-1.23.65 1.66.24 2.88.12 3.18.77.84 1.23 1.91 1.23 3.22 0 4.61-2.8 5.63-5.48 5.92.43.37.81 1.1.81 2.22l-.01 3.29c0 .32.22.7.83.58A12 12 0 0 0 24 12.5C24 5.87 18.63.5 12 .5z"/></svg>
-          GitHub
-        </a>
+        <a href="https://www.linkedin.com/in/augustindelaporte">LinkedIn</a>
+        <a href="https://github.com/GuGuss">GitHub</a>
       </div>
     </div>
-
-    <!-- PORTRAIT — drop a square photo at photos/portrait.jpg and it appears here automatically.
-         Until then this shows the "AD" monogram. See photos/README.md. -->
-    <span class="avatar-ring">
-      <span class="avatar" role="img" aria-label="Augustin Delaporte"></span>
-    </span>
   </div>
 
   <div class="bio" id="about">
-    <p>Hi, I'm a product leader with <strong>15+ years</strong> in developer platforms and cloud infrastructure. I joined Upsun (formerly Platform.sh) as employee&nbsp;#4 and helped build the product organisation, which grew from one PM to <strong>20+ PMs and Directors</strong> across three continents, while the company went from <strong>4 to 350+ people</strong> and <strong>€0 to €50M ARR</strong>.</p>
+    <p>Hi, I'm a product leader with 15+ years in developer platforms and cloud infrastructure. I joined Upsun (formerly Platform.sh) as employee&nbsp;#4 and helped build the product organisation, which grew from one PM to 20+ PMs and Directors across three continents, while the company went from <strong>4 to 350+ people and €0 to €50M ARR</strong>.</p>
     <p>I never stop building, that's how I stay close to the craft.</p>
   </div>
 </header>
@@ -364,83 +313,94 @@
 <main id="main">
 
   <section id="experience" class="wrap">
-    <h2 class="sh"><span class="hash">#</span>Experience</h2>
-    <!-- Content and exact dates from the FlowCV résumé (2026-09-01). Four roles at the same
-         company are grouped under one header so the 12-year progression reads at a glance. -->
-    <div class="timeline">
-
-      <div class="tl-group">
-        <div class="tl-co">
-          <h3>Upsun <span class="org">(formerly Platform.sh)</span></h3>
-          <span class="span">2014 — 2026 · Remote</span>
-        </div>
-
-        <div class="tl">
-          <div class="year">Mar 2022 — Jun 2026</div>
+    <h2 class="sh">Experience</h2>
+    <!-- Content and exact dates from the FlowCV résumé. Roles at one company are grouped so
+         the progression reads at a glance; dates hang in the shared margin column. -->
+    <div class="tl-group">
+      <div class="tl-span">2014 — 2026 · Remote</div>
+      <div class="tl-span"></div>
+      <div class="tl-co">
+        <h3>Upsun <span class="org">(formerly Platform.sh)</span></h3>
+      </div>
+      <div class="tl">
+        <div class="year">Mar 2022 — Jun 2026</div>
+        <div class="tl-body">
           <h4>VP Product</h4>
           <p>Product strategy and execution for a developer-first cloud platform. Built and scaled the product organisation from 1 to 20+ PMs and Directors while staying hands-on; led the Platform.sh → Upsun rebrand and repositioning toward self-service, the CLI's migration from PHP to Go, and the shift to AI-native workflows — AI configuration APIs in the CLI and IDE extensions, and agent-driven configuration and troubleshooting.</p>
         </div>
-
-        <div class="tl">
-          <div class="year">Apr 2019 — Mar 2022</div>
+      </div>
+      <div class="tl">
+        <div class="year">Apr 2019 — Mar 2022</div>
+        <div class="tl-body">
           <h4>Product Director</h4>
           <p>Led distributed product teams on core platform capabilities — deployment automation, environment management, developer tooling. Shipped the enterprise-grade compliance set (SOC&nbsp;2, HIPAA, PCI) that unlocked large-scale customers, and scaled white-label offerings including Adobe Commerce Cloud into partner ecosystems.</p>
         </div>
-
-        <div class="tl">
-          <div class="year">Oct 2017 — Apr 2019</div>
+      </div>
+      <div class="tl">
+        <div class="year">Oct 2017 — Apr 2019</div>
+        <div class="tl-body">
           <h4>General Manager, China</h4>
           <p>Launched and operated Platform.sh in mainland China — local team, partnerships and compliant infrastructure to enable regional deployment and expansion.</p>
         </div>
-
-        <div class="tl">
-          <div class="year">May 2014 — Oct 2017</div>
+      </div>
+      <div class="tl">
+        <div class="year">May 2014 — Oct 2017</div>
+        <div class="tl-body">
           <h4>Delivery Manager</h4>
           <p>Employee&nbsp;#4. Led delivery of the early platform and its first white-label offerings, including Magento Cloud / Adobe Commerce Cloud. Built core platform capabilities: deployment infrastructure, developer tooling and billing systems.</p>
         </div>
       </div>
-
-      <div class="tl-group">
-        <div class="tl-co">
-          <h3>Commerce Guys</h3>
-          <span class="span">Mar 2011 — May 2014 · Paris</span>
-        </div>
-        <div class="tl">
+    </div>
+    <div class="tl-group">
+      <div class="tl-span">Mar 2011 — May 2014 · Paris</div>
+      <div class="tl-span"></div>
+      <div class="tl-co">
+        <h3>Commerce Guys</h3>
+      </div>
+      <div class="tl">
+        <div class="year"></div>
+        <div class="tl-body">
           <h4>Technical Project Manager</h4>
           <p>Led Agile teams delivering enterprise e-commerce platforms on Drupal Commerce, and launched the Enterprise Support offering — driving adoption through training and community engagement.</p>
         </div>
       </div>
-
-      <div class="tl-group">
-        <div class="tl-co">
-          <h3>Davyin Internet Solutions</h3>
-          <span class="span">Jul 2010 — Mar 2011 · Shanghai</span>
-        </div>
-        <div class="tl">
+    </div>
+    <div class="tl-group">
+      <div class="tl-span">Jul 2010 — Mar 2011 · Shanghai</div>
+      <div class="tl-span"></div>
+      <div class="tl-co">
+        <h3>Davyin Internet Solutions</h3>
+      </div>
+      <div class="tl">
+        <div class="year"></div>
+        <div class="tl-body">
           <h4>Software Engineer</h4>
           <p>First job, first China chapter.</p>
         </div>
       </div>
-
-      <div class="tl-group">
-        <div class="tl-co">
-          <h3>Education</h3>
-        </div>
-        <div class="tl edu">
-          <div class="year">2006 — 2011</div>
+    </div>
+    <div class="tl-group">
+      <div class="tl-span"></div>
+      <div class="tl-co">
+        <h3>Education</h3>
+      </div>
+      <div class="tl">
+        <div class="year">2006 — 2011</div>
+        <div class="tl-body">
           <h4>Engineering Degree, Computer Science <span class="org">· INSA Lyon, France</span></h4>
         </div>
-        <div class="tl edu">
-          <div class="year">2010</div>
+      </div>
+      <div class="tl">
+        <div class="year">2010</div>
+        <div class="tl-body">
           <h4>Exchange semester, Computer Science <span class="org">· University of Helsinki, Finland</span></h4>
         </div>
       </div>
-
     </div>
   </section>
 
   <section id="skills" class="wrap">
-    <h2 class="sh"><span class="hash">#</span>Skills</h2>
+    <h2 class="sh">Skills</h2>
     <!-- Categories and content from the résumé (2026-09-01). Languages is a category there too,
          so the language cards live here rather than in "Off the clock". -->
     <dl class="skl">
@@ -468,7 +428,7 @@
   </section>
 
   <section id="work" class="wrap">
-    <h2 class="sh"><span class="hash">#</span>Case studies</h2>
+    <h2 class="sh">Case studies</h2>
 
     <details class="case">
       <summary>
@@ -483,7 +443,7 @@
           </span>
         </span>
         <span class="case-x" aria-hidden="true"></span>
-      </summary>
+        </summary>
       <div class="case-body">
         <p><b>Problem.</b> Platform.sh was engineering-led, and for a while that worked: the founders and the engineers closest to the code made the calls. Growth broke it. New segments — enterprise, e-commerce, agencies — opened faster than anyone could own them, and there was no product function to hand prioritisation, discovery or the product-market-fit conversation to.</p>
         <p><b>Approach.</b> Moving the company from engineering-driven to product-driven, while I was learning the role in the middle of it. We hired the first PMs, wrote the operating model as we went — discovery cadence, RFC process, quarterly planning — and grew the team. We got the structure wrong several times: ownership boundaries, reporting lines, how product paired with engineering. Each version held until the company outgrew it, and then we changed it again instead of defending it.</p>
@@ -504,7 +464,7 @@
           </span>
         </span>
         <span class="case-x" aria-hidden="true"></span>
-      </summary>
+        </summary>
       <div class="case-body">
         <p><b>Problem.</b> Developers increasingly work through AI assistants and IDEs, but the platform's interface assumed a human at a CLI or console. Without a machine-usable surface, Upsun would be invisible to the fastest-growing part of the developer workflow.</p>
         <p><b>Approach.</b> Framed "AI-native" as three concrete bets: (1) AI-assisted configuration, so intent — not YAML — is the input; (2) an MCP server exposing platform operations to any assistant; (3) agent-based troubleshooting for common failure modes. Each bet was prototyped hands-on to pressure-test feasibility before staffing the work.</p>
@@ -525,7 +485,7 @@
           </span>
         </span>
         <span class="case-x" aria-hidden="true"></span>
-      </summary>
+        </summary>
       <div class="case-body">
         <p><b>Problem.</b> Customers and partners — mostly e-commerce — kept asking us to open a cloud region in mainland China. Serving that demand was never just an infrastructure question: it required a local legal entity, a team on the ground, and cloud operator licences, none of which are formalities there.</p>
         <p><b>Approach.</b> I went out because I spoke Mandarin and had worked in China earlier in my career. We set up the entity, ran the licensing process, and worked the customer and partner channel directly rather than through the standard go-to-market motion. The architecture and the stacks had to change too: development environments secured by default to meet local regulation, and proxies inside the Great Firewall so builds could still resolve their dependencies.</p>
@@ -546,7 +506,7 @@
           </span>
         </span>
         <span class="case-x" aria-hidden="true"></span>
-      </summary>
+        </summary>
       <div class="case-body">
         <p><b>Problem.</b> Magento wanted a managed cloud offering and had failed to ship one more than once — in-house, and with third-party partners. Platform.sh had the technology but nothing that could carry someone else's brand: no white-label product, no partner-scale support model, and gaps in enterprise compliance.</p>
         <p><b>Approach.</b> Treated it as an engineering problem rather than a branding exercise. I spent two months embedded in Magento's offices in Austin, working directly with their teams, and we reworked several parts of our own architecture to fit their model — isolation, environment topology, support tiers and SLAs sized for a partner rather than an end customer. Where the stack needed capability we didn't own, we partnered instead of building — <b>Fastly</b> at the edge, <b>Blackfire</b> for performance profiling — so the result read as one product rather than an assembly. Compliance (SOC&nbsp;2, HIPAA, PCI) was prioritised as a sales unlock, not a checkbox. Requirements and escalations flowed through a partner, which changed how the roadmap had to be run.</p>
@@ -556,13 +516,13 @@
   </section>
 
   <section id="community" class="wrap">
-    <h2 class="sh"><span class="hash">#</span>Community</h2>
+    <h2 class="sh">Community</h2>
 
     <!-- Grouped by category: the group heading carries the icon, so rows need no per-row label.
          Description column is uniform inside each group — "what it is" for projects and open
          source, "publisher · year" for published pieces. -->
     <div class="group">
-      <h3><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-project"/></svg>Projects</h3>
+      <h3>Projects</h3>
       <ul class="list">
         <li><a href="https://racewiser.com">RaceWiser</a><span class="src">Triathlon race analysis tool</span></li>
         <li><a href="https://www.aillucination.com">Aillucination</a><span class="src">AI hallucination-spotting tool</span></li>
@@ -571,7 +531,7 @@
     </div>
 
     <div class="group">
-      <h3><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-oss"/></svg>Open source</h3>
+      <h3>Open source</h3>
       <ul class="list">
         <li><a href="https://github.com/GuGuss/ARTE-7-Downloader">ARTE-7-Downloader</a><span class="src">262 ★ · 31 forks</span></li>
         <li><a href="https://www.drupal.org/u/guguss">Drupal &amp; Drupal Commerce</a><span class="src">15+ years contributing</span></li>
@@ -579,7 +539,7 @@
     </div>
 
     <div class="group">
-      <h3><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-podcast"/></svg>Podcasts</h3>
+      <h3>Podcasts</h3>
       <ul class="list">
         <li><a href="https://francais.podcast.go-aws.com/web/episodes/231/index.html">Upsun : un PaaS multi-cloud, comment ça marche ?</a><span class="src">Le Podcast AWS en Français · 2024</span></li>
         <li><a href="https://smartlink.ausha.co/clef-de-voute/72-platform-sh-il-est-le-4eme-employe-d-une-boite-de-320-personnes-et-50m-arr-augustin-de-la-porte-vp-product">4th employee of a 320-person, $50M ARR company</a><span class="src">Clé de Voûte · 2023</span></li>
@@ -587,7 +547,7 @@
     </div>
 
     <div class="group">
-      <h3><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-article"/></svg>Articles</h3>
+      <h3>Articles</h3>
       <ul class="list">
         <li><a href="https://upsun.com/blog/instant-data-complete-preview-environments/">Outsmarting the competition with instant data-complete preview environments</a><span class="src">Upsun · 2024</span></li>
         <li><a href="https://upsun.com/blog/data-cloning-the-game-changer-for-developing-cloud-based-applications/">What is instant data cloning? The game changer for cloud-based applications</a><span class="src">Upsun · 2024</span></li>
@@ -600,53 +560,41 @@
   </section>
 
   <section id="offclock" class="wrap">
-    <h2 class="sh"><span class="hash">#</span>Off the clock</h2>
-    <!-- Framing: the old version was a grab-bag of unrelated facts. These three are held together
-         by one stated through-line — long horizons — so the section argues something instead of listing. -->
+    <h2 class="sh">Off the clock</h2>
+    <!-- One through-line — long horizons — so the section argues something instead of listing.
+         Three identical image-left rows; titles are short noun phrases, no article, no verb. -->
     <p class="intro">Everything I care about outside work is measured in years, not weekends.</p>
 
-    <!-- Card titles follow one pattern: a short noun phrase, no leading article, no verb.
-         PHOTOS: swap a file in photos/ under the same name — see photos/README.md. -->
-    <article class="pcard wide">
-      <div class="photo" style="background-image: url('photos/van.jpg'), linear-gradient(150deg, var(--accent-soft), var(--surface));" role="img" aria-label="The van parked under a starry sky"></div>
-      <div class="pbody">
-        <div class="pcard-h">
-          <svg class="ico ico-lg" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-van"/></svg>
-          <h3>Two years in a van</h3>
+    <article class="oc">
+      <div class="photo" style="background-image: url('photos/van.jpg')" role="img" aria-label="The van parked under a starry sky"></div>
+      <div>
+        <h3>Two years in a van</h3>
+        <p>Travelled across Europe in a van with my wife, kids and cat while working full time. The press and a few podcasts came asking how remote work held up at that distance.</p>
+        <div class="press">
+          <a href="https://www.lemonde.fr/emploi/article/2022/09/26/quand-le-salarie-teletravaille-depuis-un-camping-car_6143150_1698637.html">Le Monde</a>
+          <a href="https://emploi.lefigaro.fr/actu-emploi/salarie-itinerant-j-ai-teletravaille-15-mois-dans-un-van-en-traversant-l-europe-20230131">Le Figaro</a>
+          <a href="https://www.raconteur.net/future-of-work/digital-nomad-ceos-senior-leaders">Raconteur</a>
+          <a href="https://creators.spotify.com/pod/profile/generationremote/episodes/25---Travailler-comme-digital-nomad--avec-Augustin-Delaporte-e1kgif6">Génération Remote</a>
+          <a href="https://www.spreaker.com/episode/digital-nomad--50216461">Silicon Carne</a>
         </div>
-      <p>Travelled across Europe in a van with my wife, kids and cat while working full time. The press and a few podcasts came asking how remote work held up at that distance:</p>
-      <div class="press">
-        <a class="pchip" href="https://www.lemonde.fr/emploi/article/2022/09/26/quand-le-salarie-teletravaille-depuis-un-camping-car_6143150_1698637.html">Le Monde</a>
-        <a class="pchip" href="https://emploi.lefigaro.fr/actu-emploi/salarie-itinerant-j-ai-teletravaille-15-mois-dans-un-van-en-traversant-l-europe-20230131">Le Figaro</a>
-        <a class="pchip" href="https://www.raconteur.net/future-of-work/digital-nomad-ceos-senior-leaders">Raconteur</a>
-        <a class="pchip" href="https://creators.spotify.com/pod/profile/generationremote/episodes/25---Travailler-comme-digital-nomad--avec-Augustin-Delaporte-e1kgif6">Génération Remote 🎙️</a>
-        <a class="pchip" href="https://www.spreaker.com/episode/digital-nomad--50216461">Silicon Carne 🎙️</a>
-      </div>
       </div>
     </article>
 
-    <div class="pgrid">
-      <article class="pcard">
-        <div class="photo" style="background-image: url('photos/ironman.jpg'), linear-gradient(150deg, var(--accent-soft), var(--surface));" role="img" aria-label="At a triathlon finish line"></div>
-        <div class="pcard-h">
-          <span class="tri" role="img" aria-label="Swim, bike, run">
-            <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-swim"/></svg>
-            <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-bike"/></svg>
-            <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-run"/></svg>
-          </span>
-          <h3>Long-distance triathlon</h3>
-        </div>
-        <p>Swim, bike, run — the long formats. Months of training for a single day of racing, but “the journey is the reward”, as a famous entrepreneur put it, and the training is the part I enjoy most. It's also what got me building <a href="https://racewiser.com">RaceWiser</a>.</p>
-      </article>
-      <article class="pcard">
-        <div class="photo" style="background-image: url('photos/family.jpg'), linear-gradient(150deg, var(--accent-soft), var(--surface));" role="img" aria-label="Family"></div>
-        <div class="pcard-h">
-          <svg class="ico ico-lg" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-family"/></svg>
-          <h3>Husband and father of two</h3>
-        </div>
+    <article class="oc">
+      <div class="photo" style="background-image: url('photos/ironman.jpg')" role="img" aria-label="At a triathlon finish line"></div>
+      <div>
+        <h3>Long-distance triathlon</h3>
+        <p>Swim, bike, run — the long formats. Months of training for a single day of racing, but &ldquo;the journey is the reward&rdquo;, as a famous entrepreneur put it, and the training is the part I enjoy most. It&rsquo;s also what got me building <a href="https://racewiser.com">RaceWiser</a>.</p>
+      </div>
+    </article>
+
+    <article class="oc">
+      <div class="photo" style="background-image: url('photos/family.jpg')" role="img" aria-label="Family"></div>
+      <div>
+        <h3>Husband and father of two</h3>
         <p>The longest commitment on this page, and the only one without a finish line.</p>
-      </article>
-    </div>
+      </div>
+    </article>
   </section>
 
 </main>
