@@ -5,11 +5,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>Augustin Delaporte — Senior / Staff / Principal Product Manager</title>
-<meta name="description" content="Product leader with 15+ years in developer platforms and cloud infrastructure. Employee #4 at Upsun (formerly Platform.sh), where the product organisation grew from 1 to 20+ PMs and Directors and the company from 4 to 350+ people and €0 to €50M ARR.">
+<meta name="description" content="Product leader with 15+ years in developer platforms and cloud infrastructure. Employee #4 at Upsun (formerly Platform.sh), where the product organisation grew from 1 to 20+ PMs and Directors and the company from 4 to 350+ people, €0 to €50M ARR, and seed to Series D ($187M raised).">
 <link rel="canonical" href="https://guguss.me">
 
 <meta property="og:title" content="Augustin Delaporte — Senior / Staff / Principal Product Manager">
-<meta property="og:description" content="Product leader, employee #4 at Upsun (formerly Platform.sh), where the product organisation grew from 1 to 20+ PMs and Directors and the company from 4 to 350+ people and €0 to €50M ARR.">
+<meta property="og:description" content="Product leader, employee #4 at Upsun (formerly Platform.sh), where the product organisation grew from 1 to 20+ PMs and Directors and the company from 4 to 350+ people, €0 to €50M ARR, and seed to Series D ($187M raised).">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://guguss.me">
 <meta property="og:image" content="https://guguss.me/photos/portrait.jpg">
@@ -231,12 +231,18 @@ main > section > *:not(.sh) { grid-column:1 / -1; }
 
 /* ===================== Off the clock ===================== */
 .intro { color:var(--muted); max-width:var(--measure); margin-bottom:var(--s5); }
-.oc { padding:var(--s5) 0; border-top:1px solid var(--rule); align-items:start; }
-.oc > .photo { grid-column:2; margin-bottom:var(--s3); }
-.oc > div { grid-column:2; }
+.oc { grid-column:1 / -1 !important; display:grid;
+      grid-template-columns:320px minmax(0,1fr); column-gap:var(--gap);
+      padding:var(--s5) 0; border-top:1px solid var(--rule); align-items:center; }
+.oc > .photo { grid-column:1; grid-row:1; }
+.oc > div { grid-column:2; grid-row:1; }
+/* the spread alternates: image left, then right, then left */
+.oc:nth-of-type(even) { grid-template-columns:minmax(0,1fr) 320px; }
+.oc:nth-of-type(even) > .photo { grid-column:2; grid-row:1; }
+.oc:nth-of-type(even) > div { grid-column:1; grid-row:1; }
 .oc:first-of-type { border-top:0; padding-top:0; }
 .oc:last-of-type { padding-bottom:0; }
-.photo { aspect-ratio:16 / 9; background-size:cover; background-position:center;
+.photo { aspect-ratio:3 / 4; background-size:cover; background-position:center;
          background-repeat:no-repeat;
          filter:grayscale(1) sepia(.16) contrast(1.09) brightness(1.03) saturate(1.4); }
 .oc h3 { font-family:var(--display); font-size:1.4375rem; font-weight:400; }
@@ -268,7 +274,7 @@ footer { border-top:1px solid var(--rule); padding:var(--s5) 0 var(--s6); }
   .namerow { flex-direction:column; align-items:flex-start; gap:var(--s1); }
   .list li { grid-template-columns:1fr; gap:2px; }
   .oc { gap:var(--s1); }
-  .photo { max-width:280px; }
+  .photo { max-width:260px; }
 }
 </style>
 </head>
@@ -305,7 +311,7 @@ footer { border-top:1px solid var(--rule); padding:var(--s5) 0 var(--s6); }
   </div>
 
   <div class="bio" id="about">
-    <p>Hi, I'm a product leader with 15+ years in developer platforms and cloud infrastructure. I joined Upsun (formerly Platform.sh) as employee&nbsp;#4 and helped build the product organisation, which grew from one PM to 20+ PMs and Directors across three continents, while the company went from <strong>4 to 350+ people and €0 to €50M ARR</strong>.</p>
+    <p>Hi, I'm a product leader with 15+ years in developer platforms and cloud infrastructure. I joined Upsun (formerly Platform.sh) as employee&nbsp;#4 and helped build the product organisation, which grew from one PM to 20+ PMs and Directors across three continents, while the company went from <strong>4 to 350+ people</strong>, from <strong>€0 to €50M ARR</strong>, and from seed to <strong>Series&nbsp;D</strong> ($187M total funding).</p>
     <p>I never stop building, that's how I stay close to the craft.</p>
   </div>
 </header>
