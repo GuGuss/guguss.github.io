@@ -150,7 +150,10 @@ main > section { display:grid; grid-template-columns:var(--gutter) minmax(0,1fr)
                  border-top:1px solid var(--rule); }
 main > section > .sh { grid-column:1; }
 main > section > *:not(.sh) { grid-column:1 / -1; }
-.intro { grid-column:2 !important; }
+/* specificity, not !important: this only needs to outrank the *:not(.sh) rule above.
+   As !important it also outranked the single-column reset at 680px, so .intro stayed
+   in column 2 of a 1-column grid and forced an implicit column off-screen. */
+main > section > .intro { grid-column:2; }
 /* rows that reach into the margin column carry their own copy of the same grid */
 .tl-group, .group, .oc, .skl > div {
   grid-column:1 / -1 !important;
@@ -280,8 +283,19 @@ footer { border-top:1px solid var(--rule); padding:var(--s5) 0 var(--s6); }
   .namerow { flex-direction:column; align-items:flex-start; gap:var(--s2); }
   .avatar { width:132px; height:132px; }
   .list li { grid-template-columns:1fr; gap:2px; }
-  .oc { gap:var(--s1); }
+  .oc { gap:var(--s2); }
   .photo { max-width:260px; }
+
+  /* Collapsing the templates to one column is not enough: the desktop rules place
+     these children in explicit columns, and a grid-column:2 survives the collapse
+     and forces a second track, starving the other child to 0px wide. The photos
+     rendered at 0x0 and the triathlon text broke one word per line. Reset the
+     placements too, so DOM order stacks them: photo, then text. */
+  .oc:nth-of-type(even) { grid-template-columns:1fr; }
+  .oc > .photo, .oc > div,
+  .oc:nth-of-type(even) > .photo,
+  .oc:nth-of-type(even) > div { grid-column:1; grid-row:auto; }
+  .tl-co { grid-column:1; }
 }
 </style>
 </head>
