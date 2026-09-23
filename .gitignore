@@ -10,3 +10,6 @@ photos/README.md
 _preview.html
 .DS_Store
 _theme-preview.html
+
+# Local dev server config
+.claude/
