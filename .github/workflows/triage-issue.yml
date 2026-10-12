@@ -1,0 +1,61 @@
+# GuGuss/guguss.github.io : .github/workflows/triage-issue.yml
+# Pont GitHub -> Mistral Workflows : démarre une exécution du workflow de tri
+# sur le deployment managé à chaque issue ouverte. Aucun process local.
+#
+# Endpoint : POST https://api.mistral.ai/v1/workflows/{workflow}/execute
+#   https://docs.mistral.ai/studio-api/workflows/getting-started/overview
+#   (le schéma du corps n'est pas documenté ; il est tiré du SDK `mistralai`,
+#    modèle WorkflowExecutionRequest : input, deployment_name, execution_id)
+#
+# Secret requis dans le dépôt : MISTRAL_API_KEY (clé dédiée à ce pont).
+
+name: Triage issue (Mistral Workflows)
+
+on:
+  issues:
+    types: [opened]
+
+# Le job n'utilise pas le GITHUB_TOKEN de l'Action : c'est le deployment
+# Mistral qui écrit sur GitHub avec son propre secret `github_token`.
+permissions: {}
+
+jobs:
+  start-triage:
+    # Pendant le test : seulement les issues de test.
+    if: startsWith(github.event.issue.title, '[test-studio]')
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Start Mistral workflow execution
+        env:
+          MISTRAL_API_KEY: ${{ secrets.MISTRAL_API_KEY }}
+          WORKFLOW_NAME: github_issue_triage_workflow
+          DEPLOYMENT_NAME: issue-triage-managed
+        # Le titre et le corps de l'issue ne sont jamais interpolés dans le
+        # script : jq les lit dans le fichier d'événement (pas d'injection shell).
+        run: |
+          set -euo pipefail
+          request=$(jq -c --arg deployment "$DEPLOYMENT_NAME" '{
+            execution_id: "guguss-github-io-issue-\(.issue.number)",
+            deployment_name: $deployment,
+            input: {
+              action: .action,
+              issue: {number: .issue.number, title: .issue.title, body: .issue.body},
+              repository: {full_name: .repository.full_name},
+              sender: {login: .sender.login}
+            }
+          }' "$GITHUB_EVENT_PATH")
+
+          status=$(curl -sS -o response.json -w '%{http_code}' \
+            -X POST "https://api.mistral.ai/v1/workflows/${WORKFLOW_NAME}/execute" \
+            -H "Authorization: Bearer ${MISTRAL_API_KEY}" \
+            -H "Content-Type: application/json" \
+            --data "$request")
+
+          echo "HTTP ${status}"
+          jq '{execution_id, workflow_name, deployment_name, status, start_time}' response.json || cat response.json
+          if [ "$status" -ge 300 ]; then
+            echo "::error::Mistral a refusé l'exécution (HTTP ${status})"
+            exit 1
+          fi
+          echo "execution_id=$(jq -r .execution_id response.json)" >> "$GITHUB_STEP_SUMMARY"
